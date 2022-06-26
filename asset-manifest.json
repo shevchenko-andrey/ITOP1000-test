@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ITOP1000-test/static/css/main.28ffcfb5.css",
+    "main.js": "/ITOP1000-test/static/js/main.9c8acec3.js",
+    "index.html": "/ITOP1000-test/index.html",
+    "main.28ffcfb5.css.map": "/ITOP1000-test/static/css/main.28ffcfb5.css.map",
+    "main.9c8acec3.js.map": "/ITOP1000-test/static/js/main.9c8acec3.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.28ffcfb5.css",
+    "static/js/main.9c8acec3.js"
+  ]
+}
