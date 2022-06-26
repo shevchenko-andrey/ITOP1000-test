@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Title } from './CurrencyConversion.styled';
+import { Title, Wrapper } from './CurrencyConversion.styled';
 import { convertValue } from 'base/API/ExchangeRatesDataAPI';
 import { useDebounce } from 'hooks';
 import CurrencyInput from 'components/CurrencyInput';
+import { Loader } from 'components/Loader/Loader';
 const CurrencyConversion = () => {
   const [firstValue, setFirstValue] = useState(1);
   const [secondValue, setSecondValue] = useState(1);
   const [firstCurency, setFirstCurency] = useState('USD');
   const [secondCurency, setSecondCurency] = useState('USD');
-  const [debouncedConvert, result] = useDebounce(convertValue, 1000);
+  const [debouncedConvert, result, loading] = useDebounce(convertValue, 1000);
   useEffect(() => {
     if (!result) {
       return;
@@ -49,20 +50,23 @@ const CurrencyConversion = () => {
   return (
     <>
       <Title>Currency conversion</Title>
-      <CurrencyInput
-        value={firstValue}
-        onChangeValue={firstValueHendler}
-        curency={firstCurency}
-        onChangeCurency={firstCurencyHandler}
-        inputName="firstInput"
-      />
-      <CurrencyInput
-        value={secondValue}
-        onChangeValue={secondValueHendler}
-        curency={secondCurency}
-        onChangeCurency={secondCurencyHandler}
-        inputName="secondInput"
-      />
+      <Wrapper>
+        <CurrencyInput
+          value={firstValue}
+          onChangeValue={firstValueHendler}
+          curency={firstCurency}
+          onChangeCurency={firstCurencyHandler}
+          inputName="firstInput"
+        />
+        {loading && <Loader />}
+        <CurrencyInput
+          value={secondValue}
+          onChangeValue={secondValueHendler}
+          curency={secondCurency}
+          onChangeCurency={secondCurencyHandler}
+          inputName="secondInput"
+        />
+      </Wrapper>
     </>
   );
 };

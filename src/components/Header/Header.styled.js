@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 export const StyledHeader = styled.header`
-  background-color: #170710;
+  background-color: #414994;
   padding: 20px 0;
 `;
 export const ExchangeRatesList = styled.ul`

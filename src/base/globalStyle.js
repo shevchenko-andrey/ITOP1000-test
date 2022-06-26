@@ -1,4 +1,5 @@
 import 'normalize.css';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { createGlobalStyle } from 'styled-components';
 export const GlobalStyle = createGlobalStyle`
 
@@ -31,6 +32,7 @@ img {
 }
 
 body {
+  background-color: #161616;
   font-weight: 400;
   font-family: "Roboto"
 }
