@@ -25,19 +25,26 @@ const CurrencyConversion = () => {
     }
   }, [result]);
   const firstValueHendler = async e => {
-    const { value = '', name = '' } = e.target;
+    const { value = '1', name = '' } = e.target;
+    if (!value) {
+      return;
+    }
     setFirstValue(value);
 
     await debouncedConvert(name, firstCurency, secondCurency, value);
   };
   const secondValueHendler = async e => {
-    const { value = '', name = '' } = e.target;
+    const { value = '1', name = '' } = e.target;
+    if (!value) {
+      return;
+    }
     setSecondValue(value);
     await debouncedConvert(name, secondCurency, firstCurency, value);
   };
   const secondCurencyHandler = e => {
     const { value } = e.target;
     const { name } = e.currentTarget;
+
     setSecondCurency(value);
     debouncedConvert(name, value, firstCurency, secondValue);
   };

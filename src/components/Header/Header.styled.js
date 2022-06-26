@@ -11,6 +11,10 @@ export const ExchangeRatesList = styled.ul`
 
 export const ExchangeRate = styled.li`
   :not(:last-child) {
-    margin-right: 10px;
+    margin-right: 30px;
   }
+`;
+export const Text = styled.p`
+  font-weight: 700;
+  font-size: 20px;
 `;
