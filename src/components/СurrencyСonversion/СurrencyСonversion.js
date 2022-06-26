@@ -1,75 +1,67 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Title } from './CurrencyConversion.styled';
-import CurrencyInput from 'components/CurrencyInput';
 import { convertValue } from 'base/API/ExchangeRatesDataAPI';
-
+import { useDebounce } from 'hooks';
+import CurrencyInput from 'components/CurrencyInput';
 const CurrencyConversion = () => {
   const [firstValue, setFirstValue] = useState(1);
   const [secondValue, setSecondValue] = useState(1);
   const [firstCurency, setFirstCurency] = useState('USD');
   const [secondCurency, setSecondCurency] = useState('USD');
-  const handleChangeCurency = async (curency, inputName) => {
-    console.log(curency, inputName);
-    switch (inputName) {
-      case 'firstInput':
-        setFirstCurency(curency);
-        const { new_amount } = await convertValue(
-          curency,
-          secondCurency,
-          firstValue
-        );
-        setSecondValue(new_amount);
-
-        break;
-      case 'secondInput':
-        setSecondCurency(curency);
-        const response = await convertValue(curency, firstCurency, secondValue);
-        setFirstValue(response.new_amount);
-        break;
-      default:
-        break;
+  const [debouncedConvert, result] = useDebounce(convertValue, 1000);
+  useEffect(() => {
+    if (!result) {
+      return;
     }
+
+    const [response, inputName] = result;
+    if (inputName === 'firstInput') {
+      setSecondValue(response.new_amount);
+    }
+
+    if (inputName === 'secondInput') {
+      setFirstValue(response.new_amount);
+    }
+  }, [result]);
+  const firstValueHendler = async e => {
+    const { value = '', name = '' } = e.target;
+    setFirstValue(value);
+
+    await debouncedConvert(name, firstCurency, secondCurency, value);
   };
-  const handleChangeValue = async (value, inputName) => {
-    console.log(value, inputName);
-    switch (inputName) {
-      case 'firstInput':
-        setFirstValue(value);
-        const recalculation = await convertValue(
-          secondCurency,
-          firstCurency,
-          value
-        );
-
-        setSecondValue(recalculation.new_amount);
-        break;
-      case 'secondInput':
-        setSecondValue(value);
-        const recalculation2 = await convertValue(
-          firstCurency,
-          secondCurency,
-          value
-        );
-        setFirstValue(recalculation2.new_amount);
-        break;
-      default:
-        break;
-    }
+  const secondValueHendler = async e => {
+    const { value = '', name = '' } = e.target;
+    setSecondValue(value);
+    await debouncedConvert(name, secondCurency, firstCurency, value);
+  };
+  const secondCurencyHandler = e => {
+    const { value } = e.target;
+    const { name } = e.currentTarget;
+    setSecondCurency(value);
+    debouncedConvert(name, value, firstCurency, secondValue);
+  };
+  const firstCurencyHandler = e => {
+    const { value } = e.target;
+    const { name } = e.currentTarget;
+    setFirstCurency(value);
+    debouncedConvert(name, value, secondCurency, firstValue);
   };
   return (
     <>
       <Title>Currency conversion</Title>
       <CurrencyInput
-        inputName="firstInput"
-        onChangeCurency={handleChangeCurency}
         value={firstValue}
-        onChangeValue={handleChangeValue}
+        onChangeValue={firstValueHendler}
+        curency={firstCurency}
+        onChangeCurency={firstCurencyHandler}
+        inputName="firstInput"
       />
       <CurrencyInput
-        inputName="secondInput"
         value={secondValue}
-        onChangeCurency={handleChangeCurency}
-        onChangeValue={handleChangeValue}
+        onChangeValue={secondValueHendler}
+        curency={secondCurency}
+        onChangeCurency={secondCurencyHandler}
+        inputName="secondInput"
       />
     </>
   );
